@@ -1,6 +1,6 @@
 # Toolkit
 
-**TODO: Add description**
+A collection of helper functions the author found useful across multiple projects and needed a common place to shove them for reuse.
 
 ## Installation
 
