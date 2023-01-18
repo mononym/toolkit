@@ -92,4 +92,65 @@ defmodule Toolkit do
 
     calculate_digits(reduced_remaining, base, more_digits)
   end
+
+  @minute 60
+  @hour @minute * 60
+  @day @hour * 24
+  @month 2_628_288
+  @year @day * 365
+
+  @doc """
+  Given a number of seconds will return a string describing how far in the past it was.
+
+  ## Examples
+
+  iex> Toolkit.time_diff_to_string(45)
+  "45 seconds ago"
+
+  iex> Toolkit.time_diff_to_string(45_648_023_834_783)
+  "1,447,489 years ago"
+
+  iex> Toolkit.time_diff_to_string(45_648_023_834_783, "-")
+  "1-447-489 years ago"
+  """
+  @spec time_diff_to_string(seconds :: integer, delimiter :: String.t()) :: String.t()
+  def time_diff_to_string(seconds, delimiter \\ ",")
+      when is_integer(seconds) and is_binary(delimiter) do
+    cond do
+      seconds <= @minute ->
+        "#{seconds} #{maybe_plural(seconds, "second")} ago"
+
+      seconds <= @hour ->
+        diff = Integer.floor_div(seconds, @minute)
+        "#{diff} #{maybe_plural(diff, "minute")} ago"
+
+      seconds <= @day ->
+        diff = Integer.floor_div(seconds, @hour)
+        "#{diff} #{maybe_plural(diff, "hour")} ago"
+
+      seconds <= @month ->
+        diff = Integer.floor_div(seconds, @day)
+        "#{diff} #{maybe_plural(diff, "day")} ago"
+
+      seconds <= @year ->
+        diff = Integer.floor_div(seconds, @month)
+        "#{diff} #{maybe_plural(diff, "month")} ago"
+
+      seconds ->
+        diff = Integer.floor_div(seconds, @year)
+
+        delimited_diff =
+          Number.Delimit.number_to_delimited(diff, delimiter: delimiter, precision: 0)
+
+        "#{delimited_diff} #{maybe_plural(diff, "year")} ago"
+    end
+  end
+
+  defp maybe_plural(num, string) do
+    if num == 1 do
+      string
+    else
+      "#{string}s"
+    end
+  end
 end

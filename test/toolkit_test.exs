@@ -32,4 +32,42 @@ defmodule ToolkitTest do
       end
     end
   end
+
+  describe "time_diff_to_string" do
+    test "causes a function clause error when passed a negative integer" do
+      assert_raise FunctionClauseError, fn ->
+        Toolkit.generate_short_id(-100)
+      end
+    end
+
+    test "properly plurals" do
+      assert Toolkit.time_diff_to_string(0) == "0 seconds ago"
+      assert Toolkit.time_diff_to_string(1) == "1 second ago"
+      assert Toolkit.time_diff_to_string(2) == "2 seconds ago"
+    end
+
+    test "can handle seconds" do
+      assert Toolkit.time_diff_to_string(30) == "30 seconds ago"
+    end
+
+    test "can handle minutes" do
+      assert Toolkit.time_diff_to_string(60 * 30) == "30 minutes ago"
+    end
+
+    test "can handle hours" do
+      assert Toolkit.time_diff_to_string(60 * 30 * 18) == "9 hours ago"
+    end
+
+    test "can handle days" do
+      assert Toolkit.time_diff_to_string(60 * 60 * 24 * 7) == "7 days ago"
+    end
+
+    test "can handle months" do
+      assert Toolkit.time_diff_to_string(60 * 60 * 24 * 45) == "1 month ago"
+    end
+
+    test "can handle years" do
+      assert Toolkit.time_diff_to_string(60 * 60 * 24 * 500) == "1 year ago"
+    end
+  end
 end
