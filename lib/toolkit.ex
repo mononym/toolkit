@@ -5,6 +5,21 @@ defmodule Toolkit do
   """
 
   @doc """
+  Given a map, turns all of its keys to strings if they are not already.
+
+  ## Examples
+
+  iex> Toolkit.map_keys_to_strings(%{foo: :bar})
+  %{"foo" => :bar}
+  """
+  @spec map_keys_to_strings(map) :: map
+  def map_keys_to_strings(map) when is_map(map) do
+    Map.new(map, fn {key, value} ->
+        {to_string(key), value}
+    end)
+  end
+
+  @doc """
   Given an integer value, transforms it into a short string of characters from a curated list.
 
   Conceived of as a way to have the advantage of short id's in a url while using UUID's as the
